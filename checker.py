@@ -21,23 +21,27 @@ class PasswordAnalyzer:
         self.require_symbols = require_symbols
 
         #load common passwords
-        self.common_passwords = self.load_common_passwords(dictionary_file)
+        #in a nutshell, the user can or not provide a dictionary file. if the user does, it'll call the load_common_passwords method
+        #to load the passwords from the file into a set for quick lookup. if no file is provided, it instead initializes an empty set.
+        #we do this to avoid crashes in the program later
+
+        if dictionary_file:
+            self.common_passwords = self.load_common_passwords(dictionary_file)
+        else:
+            self.common_passwords = set()
 
     def load_common_passwords(self, file_path):
-        
         """
         Loads a list of common passwords from a file.
         Returns a set for quick lookup.
         """
         try:
-            with open("C:\Users\Eric\Downloads\rrockyou\rrockyou.txt", 'r') as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 return set(line.strip() for line in f)
         except FileNotFoundError:
-            print("Common password file not found.")
-
-
-        return set()
-
+            print(f"Common password file not found: {file_path}")
+            return set()
+        
     def analyze(self, password):
         """
         Main function to analyze a single password.
@@ -95,3 +99,10 @@ class PasswordAnalyzer:
         """
         # TODO: store feedback messages in an array
         pass
+
+"""""
+    Sample Usage of the program:
+
+    analyzer = PasswordAnalyzer(r"C:\Users\Eric\Downloads\wockyou\wockyou.txt")
+    score, feedback = analyzer.analyze("put your password here")
+"""
